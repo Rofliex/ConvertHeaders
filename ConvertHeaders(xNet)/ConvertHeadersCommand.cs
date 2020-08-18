@@ -118,10 +118,7 @@ namespace ConvertHeaders_xNet_
                         resultCode.Add($"httpRequest.AddHeader(\"{header[0]}\",\"{header[1].TrimStart(' ')}\");");
                     }
                 }
-
                 textSelection.Text = string.Join("\r\n", resultCode) + "\r\n";
-
-
             }
             catch { }
         }
