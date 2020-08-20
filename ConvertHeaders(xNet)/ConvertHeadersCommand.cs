@@ -100,12 +100,15 @@ namespace ConvertHeaders_xNet_
             {
                 EnvDTE.DTE dte = (EnvDTE.DTE)ServiceProvider.GetServiceAsync(typeof(EnvDTE.DTE)).ConfigureAwait(false).GetAwaiter().GetResult();
                 var textSelection = (TextSelection)dte.ActiveDocument.Selection;
-                List<string> resultCode = new List<string>();
                 var headers = Clipboard.GetText()
                     .Split(new String[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                     .Where(x => x.Count(c => c == ':') == 1)
                     .Select(x => x.Split(':'))
                     .Where(x => !unprocessedCookie.Contains(x[0]));
+
+
+                List<string> resultCode = new List<string>();
+
                 foreach (var header in headers)
                 {
 
@@ -118,7 +121,11 @@ namespace ConvertHeaders_xNet_
                         resultCode.Add($"httpRequest.AddHeader(\"{header[0]}\",\"{header[1].TrimStart(' ')}\");");
                     }
                 }
-                textSelection.Text = string.Join("\r\n", resultCode) + "\r\n";
+
+                textSelection.Insert(string.Join("\r\n", resultCode) + "\r\n");
+                textSelection.SelectAll();
+                textSelection.SmartFormat();
+                textSelection.Cancel();
             }
             catch { }
         }
